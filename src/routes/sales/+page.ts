@@ -4,11 +4,12 @@ import type { PageLoad } from './$types';
 
 
 export const load: PageLoad = async ({ url, fetch }) => {
+    
     const store = url.searchParams.get('store') || '';
     const start = url.searchParams.get('start') || '';
     const end = url.searchParams.get('end') || '';
     const type = (url.searchParams.get('type') as 'total' | 'average') || 'total';
-
+ 
     const apiParams = new URLSearchParams({ store, start, end, type });
 
     try {
@@ -18,6 +19,8 @@ export const load: PageLoad = async ({ url, fetch }) => {
         }
 
         const data: SalesResponse = await response.json();
+
+    
 
         return {
             items: data.items,

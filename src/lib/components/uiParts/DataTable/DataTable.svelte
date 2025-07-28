@@ -1,5 +1,5 @@
 <!-- DataTable.svelte with Render Functions -->
-<script lang="ts" generics="T extends Record<string, unknown>">
+<script lang="ts" generics="T extends object">
 	interface Column<T> {
 		key: keyof T;
 		label: string;
@@ -95,7 +95,7 @@
 		</thead>
 
 		<tbody>
-			{#each sortedData as row (row.id)}
+			{#each sortedData as row (row)}
 				<tr class="border-t hover:bg-gray-50">
 					{#each columns as col}
 						<td class="border border-gray-200 p-2">
