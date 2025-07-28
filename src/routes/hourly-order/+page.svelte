@@ -2,95 +2,58 @@
 <script lang="ts">
 	import DataTable from '$lib/components/uiParts/DataTable/DataTable.svelte';
 	import MySelect from '$lib/components/uiParts/MySelect.svelte';
-	import type { SalesItemByDay } from '$lib/core/interfaces/sales';
-	import type { PageProps } from './$types';
+
+
 
 	import { page } from '$app/state';
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
+	import type { Column, SalesRow } from '$lib/core/interfaces/dataTable';
+	import type { PageProps } from './$types';
+
 
 	type Row = { id: number; name: string; age: number; status: 'active' | 'inactive' };
 
-	interface Column<T> {
-		key: keyof T;
-		label: string;
-		sortable?: boolean;
-		tooltip?: string;
-		renderHeader?: (col: Column<T>, sortKey: keyof T | null, sortDir: 'asc' | 'desc') => string;
-		renderCell?: (row: T, col: Column<T>) => string;
-	}
-
 	let { data }: PageProps = $props();
-
 
 	let start = $state(data.start);
 	let end = $state(data.end);
 	let store = $state(data.store);
 
-
 	let salesData = $derived(data.items);
-
-
 
 	// $inspect(store);
 
-	let columns: Column<SalesItemByDay>[] = [
+	let columns: Column<SalesRow>[] = [
 		{
-			key: 'dayOfWeek',
+			key: 'itemsOrdered',
 			label: 'Day',
-			sortable: true,
-			tooltip: 'Day of the week'
+			sortable: false,
+			tooltip: 'Day of the week',
+			align: 'center'
 		},
 		{
-			key: 'count',
+			key: 'orderedSales',
 			label: 'Entries',
 			sortable: true,
 			tooltip: 'Number of sales entries for this day'
 		},
 		{
-			key: 'totalSales',
+			key: 'timesOrderedFirstTime',
 			label: 'Net Sales',
 			sortable: true,
 			tooltip: 'Total sales excluding tax'
 		},
 		{
-			key: 'totalDiscount',
+			key: 'timesOrdered',
 			label: 'Discount',
 			sortable: true,
 			tooltip: 'Total discount excluding tax'
 		},
 		{
-			key: 'itemsSold',
+			key: 'time',
 			label: 'Items Sold',
 			sortable: true,
 			tooltip: 'Total number of items sold'
-		},
-		{
-			key: 'groups',
-			label: 'Groups',
-			sortable: true,
-			tooltip: 'Total number of groups'
-		},
-		{
-			key: 'salesPerGroup',
-			label: 'Sales / Group',
-			sortable: true,
-			tooltip: 'Net sales per group',
-
-			renderCell: (row: SalesItemByDay, col: Column<SalesItemByDay>) => {
-				return `$${row.salesPerGroup.toFixed(2)}`;
-			}
-		},
-		{
-			key: 'people',
-			label: 'People',
-			sortable: true,
-			tooltip: 'Total number of people'
-		},
-		{
-			key: 'salesPerPeople',
-			label: 'Sales / Person',
-			sortable: true,
-			tooltip: 'Net sales per person'
 		}
 	];
 
@@ -105,20 +68,18 @@
 		params.set('store', store);
 
 		const query = params.toString().replace(/\+/g, '%20');
-		  await goto(`?${query}`, { replaceState: false, noScroll: true, keepFocus: true });
-		  await invalidate('/api/sales');
+		await goto(`?${query}`, { replaceState: false, noScroll: true, keepFocus: true });
+		await invalidate('/api/sales');
 	};
 
 	$inspect(data);
 </script>
 
-
-
-<div class="space-y-4 p-4">
+<div class="space-y-4 rounded-lg bg-white p-4 shadow">
 	<div>
 		<MySelect bind:value={store} options={items} placeholder="Choose…" />
 		<button
-			class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+			class="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
 			onclick={handleSearch}>Search</button
 		>
 	</div>

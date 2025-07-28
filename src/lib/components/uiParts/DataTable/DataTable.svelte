@@ -1,10 +1,13 @@
 <!-- DataTable.svelte with Render Functions -->
 <script lang="ts" generics="T extends object">
+	import CustomTooltip from '../CustomTooltip.svelte';
+
 	interface Column<T> {
 		key: keyof T;
 		label: string;
 		sortable?: boolean;
 		tooltip?: string;
+		align?: 'left' | 'center' | 'right';
 		renderHeader?: (col: Column<T>, sortKey: keyof T | null, sortDir: 'asc' | 'desc') => string;
 		renderCell?: (row: T, col: Column<T>) => string;
 	}
@@ -12,9 +15,10 @@
 	interface Props {
 		data: T[];
 		columns: Column<T>[];
+		totals?: Partial<T>;
 	}
 
-	let { data, columns }: Props = $props();
+	let { data, columns, totals }: Props = $props();
 
 	/* ---------- Sorting state ---------- */
 	let sortKey = $state<keyof T | null>(null);
@@ -54,15 +58,26 @@
 	function createHTML(htmlString: string) {
 		return { __html: htmlString };
 	}
+
+	function alignClass(a?: 'left' | 'center' | 'right') {
+		switch (a) {
+			case 'center':
+				return 'text-center';
+			case 'right':
+				return 'text-right';
+			default:
+				return 'text-left';
+		}
+	}
 </script>
 
-<div class="rounded-lg bg-white p-4 shadow">
-	<table class="w-full border-collapse">
+<div class="overflow-x-auto rounded-lg border border-gray-300">
+	<table class="min-w-full border-collapse whitespace-nowrap">
 		<thead>
 			<tr class="bg-gray-100">
 				{#each columns as col (col.key)}
 					<th
-						class="border border-gray-200 p-2 text-left"
+						class="border border-gray-200 p-2 {alignClass(col.align)}"
 						class:cursor-pointer={col.sortable !== false}
 						class:hover:bg-gray-200={col.sortable !== false}
 						onclick={() => col.sortable !== false && toggleSort(col.key)}
@@ -70,16 +85,11 @@
 						{#if col.renderHeader}
 							{@html col.renderHeader(col, sortKey, sortDir)}
 						{:else}
-							<span class="flex items-center gap-1">
+							<span class={alignClass(col.align)}>
 								{col.label}
 
 								{#if col.tooltip}
-									<span
-										class="inline-block h-4 w-4 shrink-0 cursor-help text-gray-500"
-										title={col.tooltip}
-									>
-										?
-									</span>
+									<CustomTooltip title={col.tooltip} />
 								{/if}
 
 								<span class="inline-block w-3 text-xs text-gray-500">
@@ -98,7 +108,7 @@
 			{#each sortedData as row (row)}
 				<tr class="border-t hover:bg-gray-50">
 					{#each columns as col}
-						<td class="border border-gray-200 p-2">
+						<td class="border border-gray-200 p-2 {alignClass(col.align)}">
 							{#if col.renderCell}
 								{@html col.renderCell(row, col)}
 							{:else}
@@ -109,5 +119,17 @@
 				</tr>
 			{/each}
 		</tbody>
+
+		{#if totals}
+			<tfoot>
+				<tr class="border-t-2 border-gray-300 bg-gray-100 font-semibold">
+					{#each columns as col}
+						<td class="border border-gray-200 p-2 {alignClass(col.align)}">
+							{totals[col.key] ?? ''}
+						</td>
+					{/each}
+				</tr>
+			</tfoot>
+		{/if}
 	</table>
 </div>
