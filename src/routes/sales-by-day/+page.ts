@@ -10,9 +10,9 @@ export const load: PageLoad = async ({ url, fetch }) => {
     const store = url.searchParams.get('store') || '';
     const start = url.searchParams.get('start') || '';
     const end = url.searchParams.get('end') || '';
-    const type = (url.searchParams.get('type') as 'total' | 'average') || 'total';
+    const viewMode = (url.searchParams.get('viewMode') as 'total' | 'average') || 'total';
  
-    const apiParams = new URLSearchParams({ store, start, end, type });
+    const apiParams = new URLSearchParams({ store, start, end, viewMode });
 
     try {
         // const response = await fetch(`/api/sales?${apiParams}`);
@@ -29,7 +29,7 @@ export const load: PageLoad = async ({ url, fetch }) => {
             store,
             start,
             end,
-            type
+            viewMode
         } satisfies SalesLoadData;
 
     } catch (error) {
@@ -40,7 +40,7 @@ export const load: PageLoad = async ({ url, fetch }) => {
             store,
             start,
             end,
-            type,
+            viewMode,
             error: error instanceof Error ? error.message : 'Failed to fetch sales data'
         } satisfies SalesLoadData;
     }

@@ -1,7 +1,7 @@
 <!-- Usage Example with Render Functions -->
 <script lang="ts">
 	import DataTable from '$lib/components/uiParts/DataTable/DataTable.svelte';
-	import MySelect from '$lib/components/uiParts/MySelect.svelte';
+	import MySelect from '$lib/components/uiParts/CustomSelect.svelte';
 
 
 
@@ -72,7 +72,6 @@
 		await invalidate('/api/sales');
 	};
 
-	$inspect(data);
 </script>
 
 <div class="space-y-4 rounded-lg bg-white p-4 shadow">

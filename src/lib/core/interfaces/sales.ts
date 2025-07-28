@@ -43,6 +43,6 @@ export interface SalesLoadData {
   store: string;
   start: string;
   end: string;
-  type: 'total' | 'average';
+  viewMode: 'total' | 'average';
   error?: string;
 }
