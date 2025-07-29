@@ -11,9 +11,9 @@
 
 	let { data }: PageProps = $props();
 
-	let start = $state(data.start);
-	let end = $state(data.end);
-	let store = $state(data.store);
+	let start = $state(data.startDate);
+	let end = $state(data.endDate);
+	// let store = $state(data.store);
 	let chartData = $state();
 	let chartLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 

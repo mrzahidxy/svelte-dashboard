@@ -3,14 +3,11 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 
-	import CustomDateRangePicker from '$lib/components/uiParts/CustomDateRangePicker.svelte';
 	import CustomSelect from '$lib/components/uiParts/CustomSelect.svelte';
+	import CustomDateRange from '$lib/components/uiParts/CustomDateRange.svelte';
 
-	/* ---- local copies of the filters (mutable) ---- */
-	let range = $state<{ start: string | undefined; end: string | undefined }>({
-		start: undefined,
-		end: undefined
-	});
+	let start = $state('');
+	let end = $state('');
 
 	let store = $state<string | undefined>(undefined);
 
@@ -29,22 +26,20 @@
 
 		const s = sp.get('start');
 		const e = sp.get('end');
-		range.start = s ? s : undefined;
-		range.end = e ? e : undefined;
+		start = s ? s : '';
+		end = e ? e : '';
 	});
 
 	/* ---- push local state to url on submit ---- */
 	function search() {
 		const sp = new URLSearchParams();
-		if (range.start) sp.set('start', range.start);
-		if (range.end) sp.set('end', range.end);
+		if (start) sp.set('startDate', start);
+		if (end) sp.set('endDate', end);
 
-		if (store) sp.set('store', store);
+		// if (store) sp.set('store', store);
 
 		goto(`?${sp.toString()}`, { replaceState: true });
 	}
-
-
 
 </script>
 
@@ -58,17 +53,18 @@
 	<div class="flex items-center">
 		<CustomSelect bind:value={store as string} options={items} placeholder="Choose..." />
 	</div>
-    
+
 	<!-- Date Range Picker -->
 	<div class="flex items-center">
-		<CustomDateRangePicker bind:startDate={range.start} bind:endDate={range.end} />
+		<CustomDateRange bind:date1={start} bind:date2={end} />
 	</div>
 
-	<!-- Submit Button -->
-	<button
-		type="submit"
-		class="h-[40px] rounded bg-blue-600 px-4 py-1 text-sm text-white hover:bg-blue-700"
-	>
-		Search
-	</button>
+	<div class="flex items-center gap-3">
+		<button
+			type="submit"
+			class="cursor-pointer h-[52px] rounded bg-blue-600 px-4 py-1 text-sm text-white hover:bg-blue-700"
+		>
+			Search
+		</button>
+	</div>
 </form>

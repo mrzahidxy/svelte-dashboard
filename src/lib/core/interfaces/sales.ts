@@ -40,9 +40,9 @@ export interface DalesByDayApiResponse {
 export interface SalesLoadData {
   items: SalesInformation[];
   total: Total;
-  store: string;
-  start: string;
-  end: string;
+  store?: string;
+  startDate: string;
+  endDate: string;
   viewMode: 'total' | 'average';
   error?: string;
 }

@@ -7,8 +7,6 @@
 	let canvas: HTMLCanvasElement | null = $state(null);
 	let chart: Chart | null = null;
 
-	$inspect('chartData on chart', chartData);
-
 	onMount(() => {
 		if (canvas) {
 			chart = new Chart(canvas, {
