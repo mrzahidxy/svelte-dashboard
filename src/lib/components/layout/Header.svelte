@@ -19,7 +19,6 @@
       <!-- Logo -->
       <div class="flex items-center">
         <img src="/logo.svg" alt="Logo" class="h-8 w-auto mr-2" />
-        <span class="font-semibold text-lg text-blue-600">ツナグNe! POS</span>
       </div>
 
       <!-- Desktop Nav -->
@@ -34,7 +33,7 @@
         class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 focus:outline-none"
         aria-controls="mobile-menu"
         aria-expanded={isOpen}
-        on:click={toggleMenu}
+        onclick={toggleMenu}
       >
         <span class="sr-only">メニューを開く</span>
         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
