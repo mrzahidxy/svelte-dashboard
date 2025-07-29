@@ -31,9 +31,9 @@
 	let store = $state<string | undefined>(undefined);
 
 	const items = [
-		{ value: 'Store 1', label: 'Store 1' },
-		{ value: 'Store 2', label: 'Store 2' },
-		{ value: 'Store 3', label: 'Store 3' }
+		{ value: '1', label: 'Store 1' },
+		{ value: '2', label: 'Store 2' },
+		{ value: '3', label: 'Store 3' }
 	];
 
 	/* ---- read current url into local state ---- */
@@ -67,6 +67,9 @@
 		if (range) sp.set('endDate', toISO(range)?.end ?? '');
 		else sp.delete('endDate');
 
+		if(store) sp.set('store', store);
+		else sp.delete('store');
+
 		goto(`?${sp}`, { replaceState: true });
 	}
 </script>
@@ -78,8 +81,8 @@
 		search();
 	}}
 >
-	<div class="flex items-center">
-		<CustomSelect bind:value={store as string} options={items} placeholder="Choose..." />
+	<div class="flex items-center w-72">
+		<CustomSelect bind:value={store as string} options={items} />
 	</div>
 
 	<!-- Date Range Picker -->
