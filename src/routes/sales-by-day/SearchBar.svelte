@@ -5,9 +5,26 @@
 
 	import CustomSelect from '$lib/components/uiParts/CustomSelect.svelte';
 	import CustomDateRange from '$lib/components/uiParts/CustomDateRange.svelte';
+	import BitsDateRangePicker from '$lib/components/uiParts/BitsDateRangePicker.svelte';
+	import type { CalendarDate } from '@internationalized/date';
+
+	let range = $state<[CalendarDate, CalendarDate]>();
+	function toISO(range: any) {
+		if (!range?.start || !range?.end) return undefined;
+
+		const pad = (n: number) => n.toString().padStart(2, '0');
+
+		const fmt = (d: any) => `${d.year}-${pad(d.month)}-${pad(d.day)}T00:00:00`; // 2024-09-11T00:00:00
+
+		return {
+			start: fmt(range.start),
+			end: fmt(range.end)
+		};
+	}
+
+	let rangeError = $state('');
 
 	const today = new Date().toISOString();
-
 	let start = $state(today);
 	let end = $state(today);
 
@@ -34,17 +51,24 @@
 
 	/* ---- push local state to url on submit ---- */
 	function search() {
+		rangeError = ''; // reset
+
+		if (!toISO(range)?.start || !toISO(range)?.end) {
+			rangeError = 'Start date and end date are required.';
+			return;
+		}
+
 		const sp = new URLSearchParams(page.url.search); // keep everything
-		if (start) sp.set('startDate', start);
+		// if (start) sp.set('startDate', start);
+		if (range) sp.set('startDate', toISO(range)?.start ?? '');
 		else sp.delete('startDate');
 
-		if (end) sp.set('endDate', end);
+		// if (end) sp.set('endDate', end);
+		if (range) sp.set('endDate', toISO(range)?.end ?? '');
 		else sp.delete('endDate');
 
 		goto(`?${sp}`, { replaceState: true });
 	}
-
-	$inspect('date', start, end);
 </script>
 
 <form
@@ -60,7 +84,9 @@
 
 	<!-- Date Range Picker -->
 	<div class="flex items-center">
-		<CustomDateRange bind:date1={start} bind:date2={end} />
+		<!-- <CustomDateRange bind:date1={start} bind:date2={end} /> -->
+
+		<BitsDateRangePicker bind:range error={rangeError} />
 	</div>
 
 	<div class="flex items-center gap-3">

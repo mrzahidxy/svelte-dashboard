@@ -6,31 +6,16 @@
 
 	interface Props {
 		label?: string;
-		value?: string;
-		startDate?: string;
-		endDate?: string;
+		range?: any;
+		error?: string;
 	}
 
-	let { label, startDate = $bindable(), endDate = $bindable() }: Props = $props();
-
-	const toFormattedISOString = (year: number, month: number, day: number) => {
-		const date = new Date(year, month - 1, day);
-		return date.toISOString().slice(0, 19); // Removes milliseconds and 'Z'
-	};
-
-	$inspect(startDate);
+	let { label, range = $bindable(), error }: Props = $props();
 </script>
 
-
-
-
 <DateRangePicker.Root
-	onValueChange={({ start, end }) => {
-		if (start && end) {
-			startDate = toFormattedISOString(start.year, start.month, start.day);
-			endDate = toFormattedISOString(end.year, end.month, end.day);
-		}
-	}}
+	locale="ja"
+	bind:value={range}
 	weekdayFormat="short"
 	fixedWeeks={true}
 	class="flex w-full max-w-[340px] flex-col gap-1.5"
@@ -77,6 +62,10 @@
 			<CalendarBlank class="size-5" />
 		</DateRangePicker.Trigger>
 	</div>
+
+	{#if error}
+		<span class="text-xs text-red-500">{error}</span>
+	{/if}
 
 	<DateRangePicker.Content sideOffset={6} class="z-50">
 		<DateRangePicker.Calendar class="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-lg">
