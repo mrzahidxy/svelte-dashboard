@@ -16,10 +16,19 @@
 					datasets: [
 						{
 							label: '',
-							data: [],
-							backgroundColor: 'rgba(75,192,192,0.4)'
+							data: []
 						}
 					]
+				},
+
+				options: {
+					scales: {
+						y: {
+							grid: {
+								display: false
+							}
+						}
+					}
 				}
 			});
 		}
@@ -27,13 +36,20 @@
 
 	$effect(() => {
 		if (!chart) return;
+
+		const ctx = chart.ctx;
+		const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+		gradient.addColorStop(0, 'rgba(75,192,192, 0.2)');
+		gradient.addColorStop(0.5, 'rgba(75,192,192, 0.5)');
+		gradient.addColorStop(1, 'rgba(0,100,150, 0.6)');
+
 		chart.data = {
 			labels: chartLabels,
 			datasets: $state.snapshot([
 				{
 					label: dataLabel,
 					data: chartData,
-					backgroundColor: 'rgba(75,192,192,0.4)'
+					backgroundColor: gradient as any
 				}
 			])
 		};
