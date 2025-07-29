@@ -71,10 +71,10 @@
 	}
 </script>
 
-<div class="overflow-x-auto rounded-lg border border-gray-300">
+<div class="overflow-x-auto rounded-md border border-gray-100">
 	<table class="min-w-full border-collapse whitespace-nowrap">
 		<thead>
-			<tr class="bg-gray-100">
+			<tr class="">
 				{#each columns as col (col.key)}
 					<th
 						class="border border-gray-200 p-2 {alignClass(col.align)}"
@@ -105,10 +105,16 @@
 		</thead>
 
 		<tbody>
-			{#each sortedData as row (row)}
-				<tr class="border-t hover:bg-gray-50">
+			{#each sortedData as row, rowIndex (row)}
+				<tr
+					class="border-t border-gray-200 text-sm text-gray-900 odd:bg-gray-50 even:bg-white hover:bg-sky-50
+        {rowIndex === sortedData.length - 1 ? 'bg-gray-100 font-semibold' : ''}"
+				>
 					{#each columns as col}
-						<td class="border border-gray-200 p-2 {alignClass(col.align)}">
+						<td
+							class="border border-gray-200 px-3 py-2 whitespace-nowrap
+            {alignClass(col.align)}"
+						>
 							{#if col.renderCell}
 								{@html col.renderCell(row, col)}
 							{:else}

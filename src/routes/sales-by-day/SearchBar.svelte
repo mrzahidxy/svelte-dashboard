@@ -6,8 +6,10 @@
 	import CustomSelect from '$lib/components/uiParts/CustomSelect.svelte';
 	import CustomDateRange from '$lib/components/uiParts/CustomDateRange.svelte';
 
-	let start = $state('');
-	let end = $state('');
+	const today = new Date().toISOString();
+
+	let start = $state(today);
+	let end = $state(today);
 
 	let store = $state<string | undefined>(undefined);
 
@@ -24,27 +26,29 @@
 		const storeParam = sp.get('store');
 		store = storeParam ? storeParam : undefined;
 
-		const s = sp.get('start');
-		const e = sp.get('end');
+		const s = sp.get('startDate');
+		const e = sp.get('endDate');
 		start = s ? s : '';
 		end = e ? e : '';
 	});
 
 	/* ---- push local state to url on submit ---- */
 	function search() {
-		const sp = new URLSearchParams();
+		const sp = new URLSearchParams(page.url.search); // keep everything
 		if (start) sp.set('startDate', start);
+		else sp.delete('startDate');
+
 		if (end) sp.set('endDate', end);
+		else sp.delete('endDate');
 
-		// if (store) sp.set('store', store);
-
-		goto(`?${sp.toString()}`, { replaceState: true });
+		goto(`?${sp}`, { replaceState: true });
 	}
 
+	$inspect('date', start, end);
 </script>
 
 <form
-	class="flex flex-wrap items-center gap-3 p-4"
+	class="flex flex-wrap items-center gap-3"
 	onsubmit={(e) => {
 		e.preventDefault();
 		search();
@@ -62,9 +66,10 @@
 	<div class="flex items-center gap-3">
 		<button
 			type="submit"
-			class="cursor-pointer h-[52px] rounded bg-blue-600 px-4 py-1 text-sm text-white hover:bg-blue-700"
+			class="h-[52px] min-w-[72px] rounded-md bg-sky-600 px-4 text-base font-semibold tracking-wide text-white
+         transition-colors duration-150 hover:bg-sky-700 focus:ring-2 focus:ring-sky-400 focus:outline-none"
 		>
-			Search
+			表示
 		</button>
 	</div>
 </form>

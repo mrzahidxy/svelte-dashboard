@@ -92,8 +92,8 @@
 	];
 
 	const tabs = [
-		{ value: 'total', label: 'Total' },
-		{ value: 'avergage', label: 'Average' }
+		{ value: 'total', label: '合計表示' },
+		{ value: 'avergage', label: '平均表示' }
 	];
 
 	// Generate chart data
@@ -101,7 +101,6 @@
 		const map = Object.fromEntries(data?.items.map((item) => [item.weekday, item.netSales]));
 		chartData = chartLabels.map((day) => map[day] ?? 0);
 	});
-
 </script>
 
 <div class="space-y-6 rounded-lg bg-white p-4 shadow-md">
@@ -112,7 +111,7 @@
 	</div>
 
 	<!-- Chart -->
-	<div class="mt-4">
+	<div class="mt-2">
 		<CustomBarChart title="Sales by Day" {chartLabels} {chartData} dataLabel="Net Sales" />
 	</div>
 

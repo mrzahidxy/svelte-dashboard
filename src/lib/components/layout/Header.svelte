@@ -19,7 +19,6 @@
       <!-- Logo -->
       <div class="flex items-center">
         <img src="/logo.svg" alt="Logo" class="h-8 w-auto mr-2" />
-        <span class="font-semibold text-lg text-blue-600">ツナグNe! POS</span>
       </div>
 
       <!-- Desktop Nav -->
